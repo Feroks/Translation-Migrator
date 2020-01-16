@@ -7,6 +7,6 @@ namespace TranslationsMigrator.Services
 {
 	public interface IJsonTranslationService
 	{
-		Task<IEnumerable<JsonTranslationDto>> ReadAsync(string path, CancellationToken cancellationToken = default);
+		ValueTask<IEnumerable<JsonTranslationDto>> ReadAsync(string path, CancellationToken cancellationToken = default);
 	}
 }
