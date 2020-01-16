@@ -8,7 +8,7 @@ namespace TranslationsMigrator.Extentions
 		public static IServiceCollection AddServices(this IServiceCollection services)
 		{
 			services.Scan(scan => scan
-				.FromExecutingAssembly()
+				.FromAssemblyOf<Program>()
 				.AddClasses(classes => classes
 					.Where(x => x.Name.EndsWith("Service")))
 				.AsImplementedInterfaces()
