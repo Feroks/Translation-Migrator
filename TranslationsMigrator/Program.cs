@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using CommandLine;
 
 namespace TranslationsMigrator
 {
@@ -6,7 +8,14 @@ namespace TranslationsMigrator
 	{
 		private static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			Parser
+				.Default
+				.ParseArguments<Options>(args)
+				.MapResult(
+					options => Task.CompletedTask, 
+					_ => Task.CompletedTask);
+
+			Console.ReadLine();
 		}
 	}
 }
