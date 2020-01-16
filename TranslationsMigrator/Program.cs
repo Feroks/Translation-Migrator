@@ -1,21 +1,53 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommandLine;
+using JetBrains.Annotations;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using TranslationsMigrator.Extentions;
 
 namespace TranslationsMigrator
 {
-	internal static class Program
+	[UsedImplicitly]
+	internal class Program
 	{
-		private static void Main(string[] args)
+		private static async Task Main(string[] args)
 		{
-			Parser
-				.Default
-				.ParseArguments<Options>(args)
-				.MapResult(
-					options => Task.CompletedTask, 
-					_ => Task.CompletedTask);
+			await using var serviceProvider = BuildServiceProvider();
+			var logger = serviceProvider.GetService<ILogger<Program>>();
+			
+			try
+			{
+				await Parser
+					.Default
+					.ParseArguments<Options>(args)
+					.MapResult(
+						ExecuteAsync,
+						_ => Task.CompletedTask);
 
-			Console.ReadLine();
+				logger.LogInformation("Finished. Press any key to exit...");
+			}
+			catch (Exception e)
+			{
+				logger.LogCritical(e, "Error has happened");
+			}
+			finally
+			{
+				Console.ReadKey();
+			}
+		}
+
+		private static ServiceProvider BuildServiceProvider() =>
+			new ServiceCollection()
+				.AddServices()
+				.AddCustomLogging()
+				.AddMediatR(typeof(Program).Assembly)
+				.BuildServiceProvider();
+
+		private static async Task ExecuteAsync(Options options)
+		{
+			await Task.Delay(2000);
 		}
 	}
 }
