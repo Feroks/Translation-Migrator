@@ -13,7 +13,7 @@ namespace TranslationsMigrator
 	[UsedImplicitly]
 	internal class Program
 	{
-		private static async Task Main(string[] args)
+		private static async Task Main()
 		{
 			await using var serviceProvider = BuildServiceProvider();
 			var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
@@ -25,20 +25,9 @@ namespace TranslationsMigrator
 				var settings = serviceProvider.GetRequiredService<ISettings>();
 				
 				Application.Init();
-				var top = Application.Top;
-
-				new ViewSetup(mediator, settings)
-					.ComposeUi(top);
-				
+				new ViewSetup(mediator, settings).ComposeUi(Application.Top);
 				Application.Run();
 				
-				// await Parser
-				// 	.Default
-				// 	.ParseArguments<Options>(args)
-				// 	.MapResult(
-				// 		options => mediator.Send(new CreateResourceFileRequest(options)),
-				// 		_ => Task.CompletedTask);
-
 				logger.LogInformation("Finished");
 			}
 			catch (Exception e)
@@ -48,7 +37,6 @@ namespace TranslationsMigrator
 			finally
 			{
 				logger.LogInformation("Press any key to exit...");
-				Console.ReadKey();
 			}
 		}
 

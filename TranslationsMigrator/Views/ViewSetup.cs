@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using MediatR;
 using Terminal.Gui;
+using TranslationsMigrator.Commands;
 
 namespace TranslationsMigrator.Views
 {
@@ -17,7 +19,7 @@ namespace TranslationsMigrator.Views
 			_settings = settings;
 		}
 
-		public ViewSetup ComposeUi(Toplevel top)
+		public void ComposeUi(Toplevel top)
 		{
 			var window = new Window("Translation Migrator")
 			{
@@ -75,8 +77,6 @@ namespace TranslationsMigrator.Views
 				runButton);
 
 			SetupEvents(sourceTextField, destinationTextField, originTextField, runButton);
-
-			return this;
 		}
 
 		private void SetupEvents(
@@ -117,6 +117,23 @@ namespace TranslationsMigrator.Views
 				.Distinct()
 				.Synchronize(sync)
 				.Subscribe(x => _settings.Origin = x);
+
+			runButton.Clicked = RunClicked;
+		}
+
+		private void RunClicked()
+		{
+			Observable
+				.FromAsync(() => _mediator
+					.Send(new CreateResourceFileRequest(
+						_settings.Source,
+						_settings.Destination,
+						_settings.Origin)))
+				// Wait to prevent this method exiting before Async method finishes
+				.Wait();
+
+			// Show message about result
+			MessageBox.Query(50, 7, "Success", "File was created!", "Ok");
 		}
 	}
 }
