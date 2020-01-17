@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TranslationsMigrator.Commands;
 using TranslationsMigrator.Extentions;
 
 namespace TranslationsMigrator
@@ -16,14 +17,15 @@ namespace TranslationsMigrator
 		{
 			await using var serviceProvider = BuildServiceProvider();
 			var logger = serviceProvider.GetService<ILogger<Program>>();
-			
+			var mediator = serviceProvider.GetService<IMediator>();
+
 			try
 			{
 				await Parser
 					.Default
 					.ParseArguments<Options>(args)
 					.MapResult(
-						ExecuteAsync,
+						options => mediator.Send(new CreateResourceFileRequest(options)),
 						_ => Task.CompletedTask);
 
 				logger.LogInformation("Finished. Press any key to exit...");
@@ -44,10 +46,5 @@ namespace TranslationsMigrator
 				.AddCustomLogging()
 				.AddMediatR(typeof(Program).Assembly)
 				.BuildServiceProvider();
-
-		private static async Task ExecuteAsync(Options options)
-		{
-			await Task.Delay(2000);
-		}
 	}
 }
