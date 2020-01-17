@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace TranslationsMigrator.Extentions
+namespace TranslationsMigrator.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{

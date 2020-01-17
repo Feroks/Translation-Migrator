@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationsMigrator.Commands;
-using TranslationsMigrator.Extentions;
+using TranslationsMigrator.Extensions;
 
 namespace TranslationsMigrator
 {
