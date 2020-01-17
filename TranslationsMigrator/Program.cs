@@ -28,7 +28,7 @@ namespace TranslationsMigrator
 						options => mediator.Send(new CreateResourceFileRequest(options)),
 						_ => Task.CompletedTask);
 
-				logger.LogInformation("Finished. Press any key to exit...");
+				logger.LogInformation("Finished");
 			}
 			catch (Exception e)
 			{
@@ -36,6 +36,7 @@ namespace TranslationsMigrator
 			}
 			finally
 			{
+				logger.LogInformation("Press any key to exit...");
 				Console.ReadKey();
 			}
 		}
