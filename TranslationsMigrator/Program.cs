@@ -5,8 +5,9 @@ using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TranslationsMigrator.Commands;
+using Terminal.Gui;
 using TranslationsMigrator.Extensions;
+using TranslationsMigrator.Views;
 
 namespace TranslationsMigrator
 {
@@ -21,12 +22,20 @@ namespace TranslationsMigrator
 
 			try
 			{
-				await Parser
-					.Default
-					.ParseArguments<Options>(args)
-					.MapResult(
-						options => mediator.Send(new CreateResourceFileRequest(options)),
-						_ => Task.CompletedTask);
+				Application.Init();
+				var top = Application.Top;
+
+				new ViewSetup(mediator)
+					.ComposeUi(top);
+				
+				Application.Run();
+				
+				// await Parser
+				// 	.Default
+				// 	.ParseArguments<Options>(args)
+				// 	.MapResult(
+				// 		options => mediator.Send(new CreateResourceFileRequest(options)),
+				// 		_ => Task.CompletedTask);
 
 				logger.LogInformation("Finished");
 			}
