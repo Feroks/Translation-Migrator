@@ -4,11 +4,17 @@ namespace TranslationsMigrator.Commands
 {
 	public class CreateResourceFileRequest : IRequest
 	{
-		public CreateResourceFileRequest(Settings settings)
+		public CreateResourceFileRequest(string sourceFilePath, string destinationFilePath, string originFilePath)
 		{
-			Settings = settings;
+			SourceFilePath = sourceFilePath;
+			DestinationFilePath = destinationFilePath;
+			OriginFilePath = originFilePath;
 		}
 		
-		public Settings Settings { get; }
+		public string SourceFilePath { get; }
+		
+		public string DestinationFilePath { get; }
+		
+		public string OriginFilePath { get; }
 	}
 }
