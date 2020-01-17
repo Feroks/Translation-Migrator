@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Terminal.Gui;
 using TranslationsMigrator.Commands;
 
@@ -10,11 +10,13 @@ namespace TranslationsMigrator.Views
 {
 	public class ViewSetup
 	{
+		private readonly ILogger _logger;
 		private readonly IMediator _mediator;
 		private readonly ISettings _settings;
 
-		public ViewSetup(IMediator mediator, ISettings settings)
+		public ViewSetup(ILogger logger, IMediator mediator, ISettings settings)
 		{
+			_logger = logger;
 			_mediator = mediator;
 			_settings = settings;
 		}
@@ -88,34 +90,28 @@ namespace TranslationsMigrator.Views
 			// Sync is used to prevent concurrent write to Settings
 			var sync = new object();
 
-			Observable
-				.FromEventPattern<EventHandler, EventArgs>(
-					h => sourceTextField.Changed += h,
-					h => sourceTextField.Changed -= h)
-				.ObserveOn(TaskPoolScheduler.Default)
-				.Select(x => sourceTextField.Text.ToString())
-				.Distinct()
-				.Synchronize(sync)
+			IObservable<string> CreateObservableOnTextField(TextField textField)
+			{
+				return Observable
+					.FromEventPattern<EventHandler, EventArgs>(
+						h => textField.Changed += h,
+						h => textField.Changed -= h)
+					.ObserveOn(TaskPoolScheduler.Default)
+					.Select(x => x.Sender)
+					.Cast<TextField>()
+					.Select(x => x.Text.ToString())
+					.DistinctUntilChanged()
+					.Throttle(TimeSpan.FromMilliseconds(10))
+					.Synchronize(sync);
+			}
+
+			CreateObservableOnTextField(sourceTextField)
 				.Subscribe(x => _settings.Source = x);
 			
-			Observable
-				.FromEventPattern<EventHandler, EventArgs>(
-					h => destinationTextField.Changed += h,
-					h => destinationTextField.Changed -= h)
-				.ObserveOn(TaskPoolScheduler.Default)
-				.Select(x => destinationTextField.Text.ToString())
-				.Distinct()
-				.Synchronize(sync)
+			CreateObservableOnTextField(destinationTextField)
 				.Subscribe(x => _settings.Destination = x);
-			
-			Observable
-				.FromEventPattern<EventHandler, EventArgs>(
-					h => originTextField.Changed += h,
-					h => originTextField.Changed -= h)
-				.ObserveOn(TaskPoolScheduler.Default)
-				.Select(x => originTextField.Text.ToString())
-				.Distinct()
-				.Synchronize(sync)
+
+			CreateObservableOnTextField(originTextField)
 				.Subscribe(x => _settings.Origin = x);
 
 			runButton.Clicked = RunClicked;
@@ -123,17 +119,24 @@ namespace TranslationsMigrator.Views
 
 		private void RunClicked()
 		{
-			Observable
-				.FromAsync(() => _mediator
-					.Send(new CreateResourceFileRequest(
-						_settings.Source,
-						_settings.Destination,
-						_settings.Origin)))
-				// Wait to prevent this method exiting before Async method finishes
-				.Wait();
-
-			// Show message about result
-			MessageBox.Query(50, 7, "Success", "File was created!", "Ok");
+			try
+			{
+				Observable
+					.FromAsync(() => _mediator
+						.Send(new CreateResourceFileRequest(
+							_settings.Source ?? string.Empty,
+							_settings.Destination ?? string.Empty,
+							_settings.Origin ?? string.Empty)))
+					// Wait to prevent this method exiting before Async method finishes
+					.Wait();
+				
+				MessageBox.Query(50, 7, "Success", "File was created!", "Ok");
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e, "Failed to create resource file");
+				MessageBox.ErrorQuery(100, 10, "Error", e.Message, "Ok");
+			}
 		}
 	}
 }

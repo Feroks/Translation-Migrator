@@ -25,7 +25,7 @@ namespace TranslationsMigrator
 				var settings = serviceProvider.GetRequiredService<ISettings>();
 				
 				Application.Init();
-				new ViewSetup(mediator, settings).ComposeUi(Application.Top);
+				new ViewSetup(logger, mediator, settings).ComposeUi(Application.Top);
 				Application.Run();
 				
 				logger.LogInformation("Finished");
