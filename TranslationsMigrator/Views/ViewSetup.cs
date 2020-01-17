@@ -7,7 +7,7 @@ namespace TranslationsMigrator.Views
 	{
 		private readonly IMediator _mediator;
 
-		public ViewSetup(IMediator mediator)
+		public ViewSetup(IMediator mediator, ISettings settings)
 		{
 			_mediator = mediator;
 		}

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Config.Net;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace TranslationsMigrator.Extensions
@@ -23,6 +24,15 @@ namespace TranslationsMigrator.Extensions
 				.AddLogging(configure => configure
 					.ClearProviders()
 					.AddConsole());
+
+			return services;
+		}
+		
+		public static IServiceCollection AddCustomSettings(this IServiceCollection services)
+		{
+			services.AddSingleton(_ => new ConfigurationBuilder<ISettings>()
+				.UseJsonFile("settings.json")
+				.Build());
 
 			return services;
 		}

@@ -4,11 +4,11 @@ namespace TranslationsMigrator.Commands
 {
 	public class CreateResourceFileRequest : IRequest
 	{
-		public CreateResourceFileRequest(Options options)
+		public CreateResourceFileRequest(Settings settings)
 		{
-			Options = options;
+			Settings = settings;
 		}
 		
-		public Options Options { get; }
+		public Settings Settings { get; }
 	}
 }

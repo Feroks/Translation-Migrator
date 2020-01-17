@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CommandLine;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,15 +16,18 @@ namespace TranslationsMigrator
 		private static async Task Main(string[] args)
 		{
 			await using var serviceProvider = BuildServiceProvider();
-			var logger = serviceProvider.GetService<ILogger<Program>>();
-			var mediator = serviceProvider.GetService<IMediator>();
+			var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+		
 
 			try
 			{
+				var mediator = serviceProvider.GetRequiredService<IMediator>();
+				var settings = serviceProvider.GetRequiredService<ISettings>();
+				
 				Application.Init();
 				var top = Application.Top;
 
-				new ViewSetup(mediator)
+				new ViewSetup(mediator, settings)
 					.ComposeUi(top);
 				
 				Application.Run();
@@ -54,6 +56,7 @@ namespace TranslationsMigrator
 			new ServiceCollection()
 				.AddServices()
 				.AddCustomLogging()
+				.AddCustomSettings()
 				.AddMediatR(typeof(Program).Assembly)
 				.BuildServiceProvider();
 	}

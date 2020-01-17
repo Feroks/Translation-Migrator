@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace TranslationsMigrator
 {
-	public class Options
+	public class Settings : ISettings
 	{
 		[Option('o', "origin", Required = true, HelpText = "Path to German Resource File")]
 		public string Origin { get; [UsedImplicitly] set; } = string.Empty;

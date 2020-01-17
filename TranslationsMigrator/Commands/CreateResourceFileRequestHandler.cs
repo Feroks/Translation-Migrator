@@ -28,7 +28,7 @@ namespace TranslationsMigrator.Commands
 
 		protected override async Task Handle(CreateResourceFileRequest request, CancellationToken cancellationToken)
 		{
-			var options = request.Options;
+			var options = request.Settings;
 			var source = options.Source;
 			var origin = options.Origin;
 			var destination = options.Destination;
