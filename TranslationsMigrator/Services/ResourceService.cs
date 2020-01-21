@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -52,9 +54,14 @@ namespace TranslationsMigrator.Services
 		public async ValueTask WriteAsync(string path, IEnumerable<ResourceValueDto> values,
 			CancellationToken cancellationToken)
 		{
+			// If Header Elements are nto present, MSBUILD throws error
+			var headerElements = await GetHeaderElementsAsync(cancellationToken)
+				.ConfigureAwait(false);
+
 			var document = new XDocument(
 				new XElement(
 					"root",
+					headerElements,
 					values
 						.Select(x =>
 							new XElement(
@@ -75,6 +82,24 @@ namespace TranslationsMigrator.Services
 			await document
 				.SaveAsync(stream, SaveOptions.None, cancellationToken)
 				.ConfigureAwait(false);
+		}
+
+		private async ValueTask<IEnumerable<XElement>> GetHeaderElementsAsync(CancellationToken cancellationToken)
+		{
+			await using var stream = Assembly
+				.GetExecutingAssembly()
+				.GetManifestResourceStream("TranslationsMigrator.Resources.Header.xml");
+
+			if (stream == null)
+				throw new ArgumentNullException(nameof(stream), "Could not find Header resource");
+
+			var document = await XDocument
+				.LoadAsync(stream, LoadOptions.None, cancellationToken)
+				.ConfigureAwait(false);
+			
+			return document
+						.Root
+						?.Elements() ?? Enumerable.Empty<XElement>();
 		}
 	}
 }

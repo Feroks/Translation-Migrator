@@ -22,4 +22,9 @@
         <TrimmerRootAssembly Include="System.Text.Json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\Header.xml" />
+      <EmbeddedResource Include="Resources\Header.xml" />
+    </ItemGroup>
+
 </Project>
