@@ -27,7 +27,7 @@ namespace TranslationsMigrator.Extensions
 
 			return services;
 		}
-		
+
 		public static IServiceCollection AddCustomSettings(this IServiceCollection services)
 		{
 			services.AddSingleton(_ => new ConfigurationBuilder<ISettings>()

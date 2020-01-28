@@ -18,7 +18,6 @@ namespace TranslationsMigrator
 			await using var serviceProvider = BuildServiceProvider();
 			var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 		
-
 			try
 			{
 				var mediator = serviceProvider.GetRequiredService<IMediator>();
