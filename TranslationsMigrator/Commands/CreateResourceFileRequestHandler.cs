@@ -28,23 +28,23 @@ namespace TranslationsMigrator.Commands
 
 		protected override async Task Handle(CreateResourceFileRequest request, CancellationToken cancellationToken)
 		{
-			var source = request.SourceFilePath;
-			var origin = request.OriginFilePath;
-			var destination = request.DestinationFilePath;
+			var sourceFilePath = request.SourceFilePath;
+			var originFilePath = request.OriginFilePath;
+			var destinationFilePath = request.DestinationFilePath;
 
-			_logger.LogInformation("Starting");
+			_logger.LogInformation("Starting Migration");
 			
-			_logger.LogInformation("Reading Translation file at: {filePath}", source);
+			_logger.LogInformation("Reading Translation file at: {filePath}", sourceFilePath);
 			var translations = await _jsonTranslationService
-				.ReadAsync(source, cancellationToken)
+				.ReadAsync(sourceFilePath, cancellationToken)
 				.ConfigureAwait(false);
 
-			_logger.LogInformation("Reading Origin Resource file at: {filePath}", origin);
+			_logger.LogInformation("Reading Origin Resource file at: {filePath}", originFilePath);
 			var resourceValues = await _resourceService
-				.ReadAsync(origin, cancellationToken)
+				.ReadAsync(originFilePath, cancellationToken)
 				.ConfigureAwait(false);
 
-			_logger.LogInformation("Writing Resource file at: {filePath}", destination);
+			_logger.LogInformation("Writing Resource file at: {filePath}", destinationFilePath);
 			var values = resourceValues
 				.Select(x =>
 				{
@@ -56,7 +56,7 @@ namespace TranslationsMigrator.Commands
 				});
 
 			await _resourceService
-				.WriteAsync(destination, values, cancellationToken)
+				.WriteAsync(destinationFilePath, values, cancellationToken)
 				.ConfigureAwait(false);
 		}
 	}

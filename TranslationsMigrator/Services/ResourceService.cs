@@ -24,7 +24,8 @@ namespace TranslationsMigrator.Services
 			_fileService = fileService;
 		}
 
-		public async ValueTask<IEnumerable<ResourceValueDto>> ReadAsync(string path,
+		public async ValueTask<IEnumerable<ResourceValueDto>> ReadAsync(
+			string path,
 			CancellationToken cancellationToken)
 		{
 			await using var steam = _fileService.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -51,10 +52,12 @@ namespace TranslationsMigrator.Services
 				});
 		}
 
-		public async ValueTask WriteAsync(string path, IEnumerable<ResourceValueDto> values,
+		public async ValueTask WriteAsync(
+			string path,
+			IEnumerable<ResourceValueDto> values,
 			CancellationToken cancellationToken)
 		{
-			// If Header Elements are nto present, MSBUILD throws error
+			// If Header Elements are not present, MSBUILD throws error
 			var headerElements = await GetHeaderElementsAsync(cancellationToken)
 				.ConfigureAwait(false);
 
@@ -84,6 +87,7 @@ namespace TranslationsMigrator.Services
 				.ConfigureAwait(false);
 		}
 
+		[ItemNotNull]
 		private async ValueTask<IEnumerable<XElement>> GetHeaderElementsAsync(CancellationToken cancellationToken)
 		{
 			await using var stream = Assembly
@@ -96,10 +100,12 @@ namespace TranslationsMigrator.Services
 			var document = await XDocument
 				.LoadAsync(stream, LoadOptions.None, cancellationToken)
 				.ConfigureAwait(false);
-			
-			return document
-						.Root
-						?.Elements() ?? Enumerable.Empty<XElement>();
+
+			var elements = document
+				.Root
+				?.Elements();
+
+			return elements ?? Enumerable.Empty<XElement>();
 		}
 	}
 }
