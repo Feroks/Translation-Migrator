@@ -23,7 +23,7 @@ namespace TranslationsMigrator
 				Application.Init();
 
 				serviceProvider
-					.GetRequiredService<ViewSetup>()
+					.GetRequiredService<MainView>()
 					.ComposeUi(Application.Top);
 
 				Application.Run();
@@ -41,6 +41,7 @@ namespace TranslationsMigrator
 		{
 			return new ServiceCollection()
 				.AddViews()
+				.AddViewModels()
 				.AddServices()
 				.AddCustomLogging()
 				.AddCustomSettings()
