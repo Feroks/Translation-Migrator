@@ -1,7 +1,7 @@
 ﻿using Config.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TranslationsMigrator.Views;
+using TranslationsMigrator.Features;
 
 namespace TranslationsMigrator.Extensions
 {

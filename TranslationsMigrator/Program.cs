@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Terminal.Gui;
 using TranslationsMigrator.Extensions;
-using TranslationsMigrator.Views;
+using TranslationsMigrator.Features;
 
 namespace TranslationsMigrator
 {

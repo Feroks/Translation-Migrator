@@ -7,10 +7,9 @@ using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using TranslationsMigrator.Commands;
-using MUnit = MediatR.Unit;
 using RUnit = System.Reactive.Unit;
 
-namespace TranslationsMigrator.Views
+namespace TranslationsMigrator.Features
 {
 	public class MainViewModel : ReactiveObject
 	{
