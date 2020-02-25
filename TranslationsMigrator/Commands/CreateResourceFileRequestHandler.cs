@@ -12,8 +12,8 @@ namespace TranslationsMigrator.Commands
 	[UsedImplicitly]
 	public class CreateResourceFileRequestHandler : AsyncRequestHandler<CreateResourceFileRequest>
 	{
-		private readonly ILogger<CreateResourceFileRequestHandler> _logger;
 		private readonly IJsonTranslationService _jsonTranslationService;
+		private readonly ILogger<CreateResourceFileRequestHandler> _logger;
 		private readonly IResourceService _resourceService;
 
 		public CreateResourceFileRequestHandler(
@@ -33,22 +33,22 @@ namespace TranslationsMigrator.Commands
 			var destinationFilePath = request.DestinationFilePath;
 
 			_logger.LogInformation("Starting Migration");
-			
+
 			_logger.LogInformation("Reading Translation file at: {filePath}", sourceFilePath);
-			var translations = await _jsonTranslationService
+			var jsonTranslations = await _jsonTranslationService
 				.ReadAsync(sourceFilePath, cancellationToken)
 				.ConfigureAwait(false);
 
 			_logger.LogInformation("Reading Origin Resource file at: {filePath}", originFilePath);
-			var resourceValues = await _resourceService
+			var originResourceValues = await _resourceService
 				.ReadAsync(originFilePath, cancellationToken)
 				.ConfigureAwait(false);
 
 			_logger.LogInformation("Writing Resource file at: {filePath}", destinationFilePath);
-			var values = resourceValues
+			var destinationResourceValues = originResourceValues
 				.Select(x =>
 				{
-					var value = translations
+					var value = jsonTranslations
 						.SingleOrDefault(y => y.Origin == x.Value)
 						?.Translation;
 
@@ -56,7 +56,7 @@ namespace TranslationsMigrator.Commands
 				});
 
 			await _resourceService
-				.WriteAsync(destinationFilePath, values, cancellationToken)
+				.WriteAsync(destinationFilePath, destinationResourceValues, cancellationToken)
 				.ConfigureAwait(false);
 		}
 	}
