@@ -15,12 +15,12 @@ namespace TranslationsMigrator.Views
 {
 	public class ViewSetup
 	{
-		private readonly ILogger _logger;
+		private readonly ILogger<ViewSetup> _logger;
 		private readonly IMediator _mediator;
-		private readonly ISettings _settings;
 		private readonly ReactiveCommand<RUnit, RUnit> _migrate;
+		private readonly ISettings _settings;
 
-		public ViewSetup(ILogger logger, IMediator mediator, ISettings settings)
+		public ViewSetup(ILogger<ViewSetup> logger, IMediator mediator, ISettings settings)
 		{
 			_logger = logger;
 			_mediator = mediator;
@@ -139,7 +139,7 @@ namespace TranslationsMigrator.Views
 				.InvokeCommand(_migrate);
 		}
 
-		private async Task<System.Reactive.Unit> MigrateAsync(CancellationToken cancellationToken)
+		private async Task<RUnit> MigrateAsync(CancellationToken cancellationToken)
 		{
 			var request = new CreateResourceFileRequest(
 				_settings.Source ?? string.Empty,

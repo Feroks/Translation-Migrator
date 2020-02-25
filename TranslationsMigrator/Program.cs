@@ -17,16 +17,17 @@ namespace TranslationsMigrator
 		{
 			await using var serviceProvider = BuildServiceProvider();
 			var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-		
+
 			try
 			{
-				var mediator = serviceProvider.GetRequiredService<IMediator>();
-				var settings = serviceProvider.GetRequiredService<ISettings>();
-				
 				Application.Init();
-				new ViewSetup(logger, mediator, settings).ComposeUi(Application.Top);
+
+				serviceProvider
+					.GetRequiredService<ViewSetup>()
+					.ComposeUi(Application.Top);
+
 				Application.Run();
-				
+
 				logger.LogInformation("Application has exited");
 			}
 			catch (Exception e)
@@ -36,12 +37,15 @@ namespace TranslationsMigrator
 			}
 		}
 
-		private static ServiceProvider BuildServiceProvider() =>
-			new ServiceCollection()
+		private static ServiceProvider BuildServiceProvider()
+		{
+			return new ServiceCollection()
+				.AddViews()
 				.AddServices()
 				.AddCustomLogging()
 				.AddCustomSettings()
 				.AddMediatR(typeof(Program).Assembly)
 				.BuildServiceProvider();
+		}
 	}
 }
