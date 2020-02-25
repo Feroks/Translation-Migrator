@@ -27,15 +27,12 @@ namespace TranslationsMigrator
 				new ViewSetup(logger, mediator, settings).ComposeUi(Application.Top);
 				Application.Run();
 				
-				logger.LogInformation("Finished");
+				logger.LogInformation("Application has exited");
 			}
 			catch (Exception e)
 			{
-				logger.LogCritical(e, "Error has happened");
-			}
-			finally
-			{
-				logger.LogInformation("Press any key to exit...");
+				logger.LogCritical(e, "Application has crashed");
+				throw;
 			}
 		}
 
