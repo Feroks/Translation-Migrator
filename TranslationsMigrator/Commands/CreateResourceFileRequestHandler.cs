@@ -44,7 +44,6 @@ namespace TranslationsMigrator.Commands
 				.ReadAsync(originFilePath, cancellationToken)
 				.ConfigureAwait(false);
 
-			_logger.LogInformation("Writing Resource file at: {filePath}", destinationFilePath);
 			var destinationResourceValues = originResourceValues
 				.Select(x =>
 				{
@@ -55,6 +54,7 @@ namespace TranslationsMigrator.Commands
 					return new ResourceValueDto(x.Key, value ?? string.Empty);
 				});
 
+			_logger.LogInformation("Writing Resource file at: {filePath}", destinationFilePath);
 			await _resourceService
 				.WriteAsync(destinationFilePath, destinationResourceValues, cancellationToken)
 				.ConfigureAwait(false);

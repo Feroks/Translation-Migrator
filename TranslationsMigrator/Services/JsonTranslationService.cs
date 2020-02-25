@@ -21,7 +21,7 @@ namespace TranslationsMigrator.Services
 		public async ValueTask<IEnumerable<JsonTranslationDto>> ReadAsync(string path,
 			CancellationToken cancellationToken = default)
 		{
-			await using var stream =_fileService.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+			await using var stream = _fileService.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
 			return await JsonSerializer
 				.DeserializeAsync<IEnumerable<JsonTranslationDto>>(stream, cancellationToken: cancellationToken)

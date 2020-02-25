@@ -49,8 +49,8 @@ namespace TranslationsMigrator.Features
 
 			// Handle success
 			Migrate
-				.ObserveOn(RxApp.MainThreadScheduler)
 				.Do(_ => logger.LogInformation("Finished migrating Resource file"))
+				.ObserveOn(RxApp.MainThreadScheduler)
 				.SelectMany(x => ShowSuccessMessage.Handle(RUnit.Default))
 				.Subscribe();
 
