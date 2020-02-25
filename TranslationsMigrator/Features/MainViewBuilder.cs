@@ -11,10 +11,10 @@ namespace TranslationsMigrator.Features
 	{
 		private readonly MainViewModel _mainViewModel;
 		private readonly Window _window;
-		private TextField _destinationTextField;
-		private TextField _originTextField;
-		private Button _runButton;
-		private TextField _sourceTextField;
+		private TextField? _destinationTextField;
+		private TextField? _originTextField;
+		private Button? _runButton;
+		private TextField? _sourceTextField;
 
 		public MainViewBuilder(MainViewModel mainViewModel)
 		{
@@ -89,13 +89,13 @@ namespace TranslationsMigrator.Features
 		/// </summary>
 		public MainViewBuilder SetupBindings()
 		{
-			CreateTextFieldObservable(_sourceTextField)
+			CreateTextFieldObservable(_sourceTextField!)
 				.Subscribe(x => _mainViewModel.SourceFilePath = x);
 
-			CreateTextFieldObservable(_originTextField)
+			CreateTextFieldObservable(_originTextField!)
 				.Subscribe(x => _mainViewModel.OriginFilePath = x);
 
-			CreateTextFieldObservable(_destinationTextField)
+			CreateTextFieldObservable(_destinationTextField!)
 				.Subscribe(x => _mainViewModel.DestinationFilePath = x);
 
 			_mainViewModel
@@ -106,7 +106,7 @@ namespace TranslationsMigrator.Features
 				.ShowErrorMessage
 				.RegisterHandler(HandleShowErrorMessage);
 
-			_runButton.Clicked = () => Observable
+			_runButton!.Clicked = () => Observable
 				.Return(Unit.Default)
 				.InvokeCommand(_mainViewModel.Migrate);
 
