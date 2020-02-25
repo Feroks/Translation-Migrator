@@ -34,7 +34,7 @@ namespace TranslationsMigrator.Extensions
 
 		public static IServiceCollection AddViews(this IServiceCollection services)
 		{
-			return services.AddTransient<MainView, MainView>();
+			return services.AddTransient<MainViewBuilder, MainViewBuilder>();
 		}
 
 		public static IServiceCollection AddViewModels(this IServiceCollection services)

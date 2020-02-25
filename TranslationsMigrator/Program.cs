@@ -15,17 +15,20 @@ namespace TranslationsMigrator
 	{
 		private static async Task Main()
 		{
+			Application.Init();
+
 			await using var serviceProvider = BuildServiceProvider();
 			var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
 			try
 			{
-				Application.Init();
+				var view = serviceProvider
+					.GetRequiredService<MainViewBuilder>()
+					.SetupControls()
+					.SetupBindings()
+					.Build();
 
-				serviceProvider
-					.GetRequiredService<MainView>()
-					.ComposeUi(Application.Top);
-
+				Application.Top.Add(view);
 				Application.Run();
 
 				logger.LogInformation("Application has exited");

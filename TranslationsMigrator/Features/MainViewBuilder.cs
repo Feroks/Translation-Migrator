@@ -5,36 +5,39 @@ using System.Reactive.Linq;
 using ReactiveUI;
 using Terminal.Gui;
 
-namespace TranslationsMigrator.Views
+namespace TranslationsMigrator.Features
 {
-	public class MainView
+	public class MainViewBuilder
 	{
 		private readonly MainViewModel _mainViewModel;
+		private readonly Window _window;
+		private TextField _destinationTextField;
+		private TextField _originTextField;
+		private Button _runButton;
+		private TextField _sourceTextField;
 
-		public MainView(MainViewModel mainViewModel)
+		public MainViewBuilder(MainViewModel mainViewModel)
 		{
 			_mainViewModel = mainViewModel;
-		}
 
-		/// <summary>
-		/// Add UI components to <paramref name="top" />
-		/// </summary>
-		/// <param name="top"></param>
-		public void ComposeUi(Toplevel top)
-		{
-			var window = new Window("Translation Migrator")
+			_window = new Window("Translation Migrator")
 			{
 				Width = Dim.Fill(),
 				Height = Dim.Fill()
 			};
-			top.Add(window);
+		}
 
+		/// <summary>
+		/// Add UI components to <see cref="_window" />
+		/// </summary>
+		public MainViewBuilder SetupControls()
+		{
 			var sourceLabel = new Label("Source Translation JSON File:")
 			{
 				X = 0,
 				Y = 1
 			};
-			var sourceTextField = new TextField(_mainViewModel.SourceFilePath)
+			_sourceTextField = new TextField(_mainViewModel.SourceFilePath)
 			{
 				X = Pos.Left(sourceLabel),
 				Y = Pos.Top(sourceLabel) + 1
@@ -43,9 +46,9 @@ namespace TranslationsMigrator.Views
 			var originLabel = new Label("Origin Resource File:")
 			{
 				X = Pos.Left(sourceLabel),
-				Y = Pos.Top(sourceTextField) + 2
+				Y = Pos.Top(_sourceTextField) + 2
 			};
-			var originTextField = new TextField(_mainViewModel.OriginFilePath)
+			_originTextField = new TextField(_mainViewModel.OriginFilePath)
 			{
 				X = Pos.Left(originLabel),
 				Y = Pos.Top(originLabel) + 1
@@ -54,48 +57,45 @@ namespace TranslationsMigrator.Views
 			var destinationLabel = new Label("Destination Resource File:")
 			{
 				X = Pos.Left(sourceLabel),
-				Y = Pos.Top(originTextField) + 4
+				Y = Pos.Top(_originTextField) + 4
 			};
-			var destinationTextField = new TextField(_mainViewModel.DestinationFilePath)
+			_destinationTextField = new TextField(_mainViewModel.DestinationFilePath)
 			{
 				X = Pos.Left(destinationLabel),
 				Y = Pos.Top(destinationLabel) + 1
 			};
 
-			var runButton = new Button("Run")
+			_runButton = new Button("Run")
 			{
 				X = Pos.Center(),
 				Y = Pos.AnchorEnd(2)
 			};
 
-			window.Add(
+			_window.Add(
 				sourceLabel,
-				sourceTextField,
+				_sourceTextField,
 				originLabel,
-				originTextField,
+				_originTextField,
 				destinationLabel,
-				destinationTextField,
-				runButton);
+				_destinationTextField,
+				_runButton);
 
-			SetupBindings(sourceTextField, originTextField, destinationTextField, runButton);
+			return this;
 		}
 
 		/// <summary>
 		/// Bind values to ViewModel
-		/// <remarks>Real binding is not available, therefore event subscriptions are used</remarks>
+		/// <remarks>Real binding are not available, therefore event subscriptions are used instead</remarks>
 		/// </summary>
-		private void SetupBindings(TextField sourceTextField,
-			TextField originTextField,
-			TextField destinationTextField,
-			Button runButton)
+		public MainViewBuilder SetupBindings()
 		{
-			CreateTextFieldObservable(sourceTextField)
+			CreateTextFieldObservable(_sourceTextField)
 				.Subscribe(x => _mainViewModel.SourceFilePath = x);
 
-			CreateTextFieldObservable(originTextField)
+			CreateTextFieldObservable(_originTextField)
 				.Subscribe(x => _mainViewModel.OriginFilePath = x);
 
-			CreateTextFieldObservable(destinationTextField)
+			CreateTextFieldObservable(_destinationTextField)
 				.Subscribe(x => _mainViewModel.DestinationFilePath = x);
 
 			_mainViewModel
@@ -106,9 +106,19 @@ namespace TranslationsMigrator.Views
 				.ShowErrorMessage
 				.RegisterHandler(HandleShowErrorMessage);
 
-			runButton.Clicked = () => Observable
+			_runButton.Clicked = () => Observable
 				.Return(Unit.Default)
 				.InvokeCommand(_mainViewModel.Migrate);
+
+			return this;
+		}
+
+		/// <summary>
+		/// Create Main Window
+		/// </summary>
+		public View Build()
+		{
+			return _window;
 		}
 
 		private static void HandleShowSuccessMessage(InteractionContext<Unit, Unit> interaction)
