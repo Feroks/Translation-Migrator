@@ -1,13 +1,11 @@
-using System;
-
 namespace TranslationsMigrator
 {
 	public interface ISettings
 	{
-		string? Origin { get; set; }
+		string? OriginFolderPath { get; set; }
 		
-		string? Source { get; set; }
+		string? SourceFilePath { get; set; }
 		
-		string? Destination { get; set; }
+		string? DestinationFolderPath { get; set; }
 	}
 }

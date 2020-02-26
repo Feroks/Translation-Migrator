@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -32,12 +34,12 @@ namespace TranslationsMigrator.Features
 		/// </summary>
 		public MainViewBuilder SetupControls()
 		{
-			var sourceLabel = new Label("Source Translation JSON File:")
+			var sourceLabel = new Label("Source Translation JSON Folder:")
 			{
 				X = 0,
 				Y = 1
 			};
-			_sourceTextField = new TextField(_mainViewModel.SourceFilePath)
+			_sourceTextField = new TextField(_mainViewModel.SourceFolderPath)
 			{
 				X = Pos.Left(sourceLabel),
 				Y = Pos.Top(sourceLabel) + 1
@@ -54,12 +56,12 @@ namespace TranslationsMigrator.Features
 				Y = Pos.Top(originLabel) + 1
 			};
 
-			var destinationLabel = new Label("Destination Resource File:")
+			var destinationLabel = new Label("Destination Resource Folder:")
 			{
 				X = Pos.Left(sourceLabel),
 				Y = Pos.Top(_originTextField) + 4
 			};
-			_destinationTextField = new TextField(_mainViewModel.DestinationFilePath)
+			_destinationTextField = new TextField(_mainViewModel.DestinationFolderPath)
 			{
 				X = Pos.Left(destinationLabel),
 				Y = Pos.Top(destinationLabel) + 1
@@ -90,13 +92,13 @@ namespace TranslationsMigrator.Features
 		public MainViewBuilder SetupBindings()
 		{
 			CreateTextFieldObservable(_sourceTextField!)
-				.Subscribe(x => _mainViewModel.SourceFilePath = x);
+				.Subscribe(x => _mainViewModel.SourceFolderPath = x);
 
 			CreateTextFieldObservable(_originTextField!)
 				.Subscribe(x => _mainViewModel.OriginFilePath = x);
 
 			CreateTextFieldObservable(_destinationTextField!)
-				.Subscribe(x => _mainViewModel.DestinationFilePath = x);
+				.Subscribe(x => _mainViewModel.DestinationFolderPath = x);
 
 			_mainViewModel
 				.ShowSuccessMessage
@@ -121,9 +123,25 @@ namespace TranslationsMigrator.Features
 			return _window;
 		}
 
-		private static void HandleShowSuccessMessage(InteractionContext<Unit, Unit> interaction)
+		private static void HandleShowSuccessMessage(InteractionContext<IReadOnlyCollection<string>, Unit> interaction)
 		{
-			MessageBox.Query(50, 7, "Success", "File was created!", "Ok");
+			var fileNames = interaction.Input;
+
+			// We do not want list of filenames to overlap whole message box
+			// Therefore use count. 5 is additional number of lines (for title, button and margins)
+			var height = fileNames.Count + 5;
+			
+			// Same approach for Width
+			var width = fileNames
+				// 10 adds additional spaces to the left and to the right
+				.Select(x => x.Length + 10)
+				// This ensures Min Width, and avoids exception if collection is empty
+				.Append(50)
+				.Max();
+			
+			var message = string.Join(Environment.NewLine, fileNames);
+
+			MessageBox.Query(width, height, "Following files were created:", message, "Ok");
 			interaction.SetOutput(Unit.Default);
 		}
 
