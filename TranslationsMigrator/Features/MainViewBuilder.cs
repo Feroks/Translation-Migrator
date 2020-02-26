@@ -110,7 +110,7 @@ namespace TranslationsMigrator.Features
 
 			_runButton!.Clicked = () => Observable
 				.Return(Unit.Default)
-				.InvokeCommand(_mainViewModel.Migrate);
+				.InvokeCommand(_mainViewModel.CreateResourceFiles);
 
 			return this;
 		}

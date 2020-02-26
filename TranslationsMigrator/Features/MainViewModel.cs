@@ -28,7 +28,7 @@ namespace TranslationsMigrator.Features
 
 			ShowSuccessMessage = new Interaction<IReadOnlyCollection<string>, RUnit>();
 			ShowErrorMessage = new Interaction<Exception, RUnit>();
-			Migrate = ReactiveCommand.CreateFromTask(MigrateAsync);
+			CreateResourceFiles = ReactiveCommand.CreateFromTask(CreateResourceFilesAsync);
 
 			// Settings is a json File. Concurrent write will cause issues, therefore lock it via sync object
 			var sync = new object();
@@ -49,14 +49,14 @@ namespace TranslationsMigrator.Features
 				.Subscribe(x => settings.DestinationFolderPath = x);
 
 			// Handle success
-			Migrate
+			CreateResourceFiles
 				.Do(_ => logger.LogInformation("Finished migrating Resource file"))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.SelectMany(ShowSuccessMessage.Handle)
 				.Subscribe();
 
 			// Handle error
-			Migrate
+			CreateResourceFiles
 				.ThrownExceptions
 				.Do(e => logger.LogError(e, "Failed to migrate Resource file"))
 				.ObserveOn(RxApp.MainThreadScheduler)
@@ -73,7 +73,7 @@ namespace TranslationsMigrator.Features
 		[Reactive]
 		public string DestinationFolderPath { get; set; }
 
-		public ReactiveCommand<RUnit, IReadOnlyCollection<string>> Migrate { get; }
+		public ReactiveCommand<RUnit, IReadOnlyCollection<string>> CreateResourceFiles { get; }
 
 		public Interaction<IReadOnlyCollection<string>, RUnit> ShowSuccessMessage { get; }
 
@@ -84,7 +84,7 @@ namespace TranslationsMigrator.Features
 		/// </summary>
 		/// <param name="cancellationToken"></param>
 		/// <returns>List of File Paths for created files</returns>
-		private async Task<IReadOnlyCollection<string>> MigrateAsync(CancellationToken cancellationToken)
+		private async Task<IReadOnlyCollection<string>> CreateResourceFilesAsync(CancellationToken cancellationToken)
 		{
 			var tasks = Directory
 				.EnumerateFiles(SourceFolderPath, "*.json", SearchOption.TopDirectoryOnly)
