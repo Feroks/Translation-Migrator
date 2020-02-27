@@ -45,14 +45,10 @@ namespace TranslationsMigrator.Commands
 				.ConfigureAwait(false);
 
 			var destinationResourceValues = originResourceValues
-				.Select(x =>
-				{
-					var value = jsonTranslations
-						.SingleOrDefault(y => y.Origin == x.Value)
-						?.Translation;
-
-					return new ResourceValueDto(x.Key, value ?? string.Empty);
-				});
+				.Join(jsonTranslations,
+					x => x.Value,
+					x => x.Origin,
+					(origin, json) => new ResourceValueDto(origin.Key, json.Translation));
 
 			_logger.LogInformation("Writing Resource file at: {filePath}", destinationFilePath);
 			await _resourceService
