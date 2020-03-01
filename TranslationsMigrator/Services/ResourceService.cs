@@ -39,9 +39,8 @@ namespace TranslationsMigrator.Services
 				.Select(x =>
 				{
 					var key = x
-						.Attributes()
-						.Single(y => y.Name == NameAttributeName)
-						.Value;
+						.Attribute(NameAttributeName)
+						?.Value;
 
 					var value = x
 						.Descendants(ValueTagName)
