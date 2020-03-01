@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace TranslationsMigrator.Commands
+namespace TranslationMigrator.App.Commands
 {
 	public class CreateResourceFileRequest : IRequest
 	{
@@ -10,11 +10,11 @@ namespace TranslationsMigrator.Commands
 			DestinationFilePath = destinationFilePath;
 			OriginFilePath = originFilePath;
 		}
-		
+
 		public string SourceFilePath { get; }
-		
+
 		public string DestinationFilePath { get; }
-		
+
 		public string OriginFilePath { get; }
 	}
 }

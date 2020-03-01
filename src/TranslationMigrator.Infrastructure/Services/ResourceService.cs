@@ -7,9 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using JetBrains.Annotations;
-using TranslationsMigrator.Models;
+using TranslationMigrator.Core;
 
-namespace TranslationsMigrator.Services
+namespace TranslationMigrator.Infrastructure.Services
 {
 	[UsedImplicitly]
 	public class ResourceService : IResourceService
@@ -39,8 +39,9 @@ namespace TranslationsMigrator.Services
 				.Select(x =>
 				{
 					var key = x
-						.Attribute(NameAttributeName)
-						?.Value;
+						.Attributes(NameAttributeName)
+						.Single()
+						.Value;
 
 					var value = x
 						.Descendants(ValueTagName)
@@ -91,7 +92,7 @@ namespace TranslationsMigrator.Services
 		{
 			await using var stream = Assembly
 				.GetExecutingAssembly()
-				.GetManifestResourceStream("TranslationsMigrator.Resources.Header.xml");
+				.GetManifestResourceStream("TranslationMigrator.Infrastructure.Resources.Header.xml");
 
 			if (stream == null)
 				throw new ArgumentNullException(nameof(stream), "Could not find Header resource");

@@ -1,4 +1,4 @@
-﻿namespace TranslationsMigrator.Models
+﻿namespace TranslationMigrator.Core
 {
 	public readonly struct ResourceValueDto
 	{

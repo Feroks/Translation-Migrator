@@ -4,9 +4,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using TranslationsMigrator.Models;
+using TranslationMigrator.Core;
 
-namespace TranslationsMigrator.Services
+namespace TranslationMigrator.Infrastructure.Services
 {
 	[UsedImplicitly]
 	public class JsonTranslationService : IJsonTranslationService

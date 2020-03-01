@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TranslationsMigrator.Models;
+using TranslationMigrator.Core;
 
-namespace TranslationsMigrator.Services
+namespace TranslationMigrator.Infrastructure.Services
 {
 	public interface IResourceService
 	{

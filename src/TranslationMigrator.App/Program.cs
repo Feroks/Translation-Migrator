@@ -5,10 +5,10 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Terminal.Gui;
-using TranslationsMigrator.Extensions;
-using TranslationsMigrator.Features;
+using TranslationMigrator.App.Extensions;
+using TranslationMigrator.App.Features.Main;
 
-namespace TranslationsMigrator
+namespace TranslationMigrator.App
 {
 	[UsedImplicitly]
 	internal class Program

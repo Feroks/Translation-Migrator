@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TranslationsMigrator.Services
+namespace TranslationMigrator.Infrastructure.Services
 {
 	public interface IFileService
 	{

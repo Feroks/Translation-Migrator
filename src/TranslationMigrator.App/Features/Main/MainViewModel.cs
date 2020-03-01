@@ -9,10 +9,10 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using TranslationsMigrator.Commands;
+using TranslationMigrator.App.Commands;
 using RUnit = System.Reactive.Unit;
 
-namespace TranslationsMigrator.Features
+namespace TranslationMigrator.App.Features.Main
 {
 	public class MainViewModel : ReactiveObject
 	{
@@ -21,7 +21,7 @@ namespace TranslationsMigrator.Features
 		public MainViewModel(ILogger<MainViewModel> logger, IMediator mediator, ISettings settings)
 		{
 			_mediator = mediator;
-			
+
 			SourceFolderPath = settings.SourceFilePath ?? string.Empty;
 			OriginFilePath = settings.OriginFolderPath ?? string.Empty;
 			DestinationFolderPath = settings.DestinationFolderPath ?? string.Empty;
@@ -80,7 +80,7 @@ namespace TranslationsMigrator.Features
 		public Interaction<Exception, RUnit> ShowErrorMessage { get; }
 
 		/// <summary>
-		/// Generate Resource file 
+		/// Generate Resource file
 		/// </summary>
 		/// <param name="cancellationToken"></param>
 		/// <returns>List of File Paths for created files</returns>

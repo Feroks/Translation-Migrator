@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using TranslationsMigrator.Models;
-using TranslationsMigrator.Services;
+using TranslationMigrator.Core;
+using TranslationMigrator.Infrastructure.Services;
 
-namespace TranslationsMigrator.Commands
+namespace TranslationMigrator.App.Commands
 {
 	[UsedImplicitly]
 	public class CreateResourceFileRequestHandler : AsyncRequestHandler<CreateResourceFileRequest>

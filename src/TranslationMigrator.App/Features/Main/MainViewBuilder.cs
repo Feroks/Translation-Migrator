@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 using ReactiveUI;
 using Terminal.Gui;
 
-namespace TranslationsMigrator.Features
+namespace TranslationMigrator.App.Features.Main
 {
 	public class MainViewBuilder
 	{
@@ -130,7 +130,7 @@ namespace TranslationsMigrator.Features
 			// We do not want list of filenames to overlap whole message box
 			// Therefore use count. 5 is additional number of lines (for title, button and margins)
 			var height = fileNames.Count + 5;
-			
+
 			// Same approach for Width
 			var width = fileNames
 				// 10 adds additional spaces to the left and to the right
@@ -138,7 +138,7 @@ namespace TranslationsMigrator.Features
 				// This ensures Min Width, and avoids exception if collection is empty
 				.Append(50)
 				.Max();
-			
+
 			var message = string.Join(Environment.NewLine, fileNames);
 
 			MessageBox.Query(width, height, "Following files were created:", message, "Ok");

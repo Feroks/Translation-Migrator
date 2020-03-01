@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using JetBrains.Annotations;
 
-namespace TranslationsMigrator.Services
+namespace TranslationMigrator.Infrastructure.Services
 {
 	[UsedImplicitly]
 	public class FileService : IFileService

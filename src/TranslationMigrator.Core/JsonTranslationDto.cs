@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace TranslationsMigrator.Models
+namespace TranslationMigrator.Core
 {
 	public class JsonTranslationDto
 	{

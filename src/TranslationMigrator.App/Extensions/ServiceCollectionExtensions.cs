@@ -1,9 +1,9 @@
 ﻿using Config.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TranslationsMigrator.Features;
+using TranslationMigrator.App.Features.Main;
 
-namespace TranslationsMigrator.Extensions
+namespace TranslationMigrator.App.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
