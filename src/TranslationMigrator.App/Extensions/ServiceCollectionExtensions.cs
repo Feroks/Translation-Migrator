@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationMigrator.App.Features.Main;
+using TranslationMigrator.Infrastructure.Services;
 
 namespace TranslationMigrator.App.Extensions
 {
@@ -10,7 +11,7 @@ namespace TranslationMigrator.App.Extensions
 		public static IServiceCollection AddServices(this IServiceCollection services)
 		{
 			return services.Scan(scan => scan
-				.FromAssemblyOf<Program>()
+				.FromAssemblyOf<FileService>()
 				.AddClasses(classes => classes
 					.Where(x => x.Name.EndsWith("Service")))
 				.AsImplementedInterfaces()
