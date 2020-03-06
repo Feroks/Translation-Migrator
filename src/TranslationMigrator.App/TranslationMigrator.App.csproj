@@ -7,27 +7,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Config.Net.Json" Version="4.14.23"/>
-        <PackageReference Include="Fody" Version="6.1.1"/>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.2"/>
-        <PackageReference Include="ReactiveUI" Version="11.2.1"/>
-        <PackageReference Include="ReactiveUI.Fody" Version="11.2.1"/>
-        <PackageReference Include="Scrutor" Version="3.2.0"/>
-        <PackageReference Include="Terminal.Gui" Version="0.65.0"/>
+        <PackageReference Include="Config.Net.Json" Version="4.14.23" />
+        <PackageReference Include="Fody" Version="6.1.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.2" />
+        <PackageReference Include="ReactiveUI" Version="11.2.3" />
+        <PackageReference Include="ReactiveUI.Fody" Version="11.2.3" />
+        <PackageReference Include="Scrutor" Version="3.2.0" />
+        <PackageReference Include="Terminal.Gui" Version="0.65.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <TrimmerRootAssembly Include="System.Text.Json"/>
+        <TrimmerRootAssembly Include="System.Text.Json" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Resources\Header.xml"/>
+        <None Remove="Resources\Header.xml" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\TranslationMigrator.Infrastructure\TranslationMigrator.Infrastructure.csproj"/>
+        <ProjectReference Include="..\TranslationMigrator.Infrastructure\TranslationMigrator.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
