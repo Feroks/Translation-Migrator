@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using NStack;
 using ReactiveUI;
 using Terminal.Gui;
 
@@ -154,7 +155,7 @@ namespace TranslationMigrator.App.Features.Main
 		private static IObservable<string> CreateTextFieldObservable(TextField textField)
 		{
 			return Observable
-				.FromEventPattern<EventHandler, EventArgs>(
+				.FromEventPattern<EventHandler<ustring>, EventArgs>(
 					h => textField.Changed += h,
 					h => textField.Changed -= h)
 				.ObserveOn(TaskPoolScheduler.Default)
