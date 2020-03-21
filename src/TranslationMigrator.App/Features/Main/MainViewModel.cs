@@ -90,7 +90,8 @@ namespace TranslationMigrator.App.Features.Main
 				.EnumerateFiles(SourceFolderPath, "*.json", SearchOption.TopDirectoryOnly)
 				.Select(async filePath =>
 				{
-					var destinationFilePath = CreateDestinationFilePath(filePath);
+					var destinationFileName = GetDestinationFileName(filePath);
+					var destinationFilePath = Path.Combine(DestinationFolderPath, destinationFileName);
 
 					var request = new CreateResourceFileRequest(
 						filePath,
@@ -114,14 +115,14 @@ namespace TranslationMigrator.App.Features.Main
 		}
 
 		/// <summary>
-		/// Create full destination File Path
-		/// <example>....\Translations.en.resx</example>
+		/// Get destination File Name
+		/// <example>Translations.en.resx</example>
 		/// </summary>
 		/// <param name="filePath">Path to original JSON file</param>
-		private string CreateDestinationFilePath(string filePath)
+		private static string GetDestinationFileName(string filePath)
 		{
 			var languageCode = GetLanguageCodeFromFileName(filePath);
-			return Path.Combine(DestinationFolderPath, $"Translations.{languageCode.ToLower()}.resx");
+			return $"Translations.{languageCode.ToLower()}.resx";
 		}
 
 		/// <summary>
